@@ -1,5 +1,7 @@
 package br.ufrpe.projetao.testecamera;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +13,13 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -19,9 +27,36 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoCapture;
 
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+
+    // Variavel que seta camera frontal ou traseira
+    private int mCameraId = 0;
+
+
+    //Progress Dialog
+    private ProgressDialog dialog;
+
+
+    //Componente da camera do Opencv;
     private CameraBridgeViewBase mOpenCvCameraView;
+
+    private LinearLayout layout;
+
+
+
+    //Componentes do OpenCV
+    private Mat edgesMat;
+    private final Scalar greenScalar = new Scalar(0,255,0);
+    boolean recording = false;
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +66,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
-        String TAG = "ta rolando";
-        Log.i(TAG,"ae");
 
 
 
+        // componente da camera instanciado
 
-
-
+        // ToolBar declarado e FloatingActionButton do layout
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -96,7 +129,34 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setIcon(R.drawable.sinal_esperar2);
+            progressDialog.setTitle("Aguarde...");
+            progressDialog.setMessage("Carregando banco de dados...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            //progressDialog.setIndeterminate(true);
+            new Thread(){
+                public void run(){
+                    try {
+
+                        Thread.sleep(3000);
+
+                        Intent secondActivity = new Intent(MainActivity.this, SecondActivity.class);
+                        startActivity(secondActivity);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    progressDialog.dismiss();
+                }
+            }.start();
+
+
+
+        }
+        if(id == R.id.action_swap_camera){
+            swapCamera();
         }
 
         return super.onOptionsItemSelected(item);
@@ -119,16 +179,72 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     @Override
     public void onCameraViewStarted(int width, int height) {
-
+        edgesMat = new Mat();
     }
 
     @Override
     public void onCameraViewStopped() {
+        if (edgesMat != null)
+            edgesMat.release();
 
+        edgesMat = null;
     }
+
+
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        return  inputFrame.rgba();
+
+        Mat rgba = inputFrame.rgba();
+        org.opencv.core.Size sizeRgba = rgba.size();
+        int rows = (int) sizeRgba.height;
+        int cols = (int) sizeRgba.width;
+
+        int left = cols / 8;
+        int top = rows / 8;
+        int width = cols * 3 / 4;
+        int height = rows * 3 / 4;
+
+        //get sub-image
+        Mat rgbaInnerWindow = rgba.submat(top, top + height, left, left + width);
+
+        //create edgesMat from sub-image
+
+        Imgproc.Canny(rgbaInnerWindow, edgesMat, 100, 100);
+
+        Mat colorEdges = new Mat();
+        Mat killMe = colorEdges;
+        edgesMat.copyTo(colorEdges);
+        Imgproc.cvtColor(colorEdges, colorEdges, Imgproc.COLOR_GRAY2BGRA);
+
+        colorEdges = colorEdges.setTo(greenScalar, edgesMat);
+        colorEdges.copyTo(rgbaInnerWindow, edgesMat);
+
+        killMe.release();
+        colorEdges.release();
+
+        rgbaInnerWindow.release();
+
+
+
+        return rgba;
     }
+
+    //Metodo que faz swap de camera frontal e traseira
+    private void swapCamera() {
+        mCameraId = mCameraId^1; //bitwise not operation to flip 1 to 0 and vice versa
+        mOpenCvCameraView.disableView();
+        mOpenCvCameraView.setCameraIndex(mCameraId);
+        mOpenCvCameraView.enableView();
+        if(mCameraId == 1) {
+            Toast.makeText(getApplicationContext(), "Camera: Frontal ", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Camera: Traseira ", Toast.LENGTH_SHORT).show();
+
+        }
+        }
+
+
+
+
 }
