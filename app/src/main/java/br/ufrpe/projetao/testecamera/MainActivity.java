@@ -1,8 +1,12 @@
 package br.ufrpe.projetao.testecamera;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -54,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     boolean recording = false;
 
 
+    private Button Bt_learn;
+    private Button Bt_play;
+
+
+
 
 
 
@@ -61,22 +70,34 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-        mOpenCvCameraView.setCvCameraViewListener(this);
 
+    Bt_learn = (Button) findViewById(R.id.Bt_learn);
+    Bt_play =  (Button) findViewById(R.id.Bt_play);
+
+        Bt_learn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent learnActivity = new Intent(MainActivity.this, LearnActivity.class);
+                startActivity(learnActivity);
+            }
+        });
+
+
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
+        //mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        //mOpenCvCameraView.setCvCameraViewListener(this);
 
 
         // componente da camera instanciado
 
         // ToolBar declarado e FloatingActionButton do layout
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+  //      Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+     /*   FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,8 +106,14 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
             }
         });
 
+*/
+   }
 
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
+
+
 
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -96,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     //Log.i(TAG, "OpenCV loaded successfully");
-                    mOpenCvCameraView.enableView();
+          //          mOpenCvCameraView.enableView();
                 } break;
                 default:
                 {

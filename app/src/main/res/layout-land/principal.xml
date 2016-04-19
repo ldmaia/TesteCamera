@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorFluidBlue"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+    <TextView
+        android:id="@+id/txt_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+        android:textColor="@color/colorWhite"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="73dp" />
+
+
+
+
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Aprender "
+        android:id="@+id/Bt_learn"
+        android:background="@drawable/screen_border"
+        android:layout_marginLeft="148dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginBottom="62dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  Jogar  "
+        android:id="@+id/Bt_play"
+        android:background="@drawable/screen_border"
+        android:layout_alignTop="@+id/Bt_learn"
+        android:layout_toRightOf="@+id/Bt_learn"
+        android:layout_toEndOf="@+id/Bt_learn"
+        android:layout_marginLeft="138dp"
+        android:layout_marginStart="138dp" />
+
+
+
+
+</RelativeLayout>

@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorFluidBlue"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+    <TextView
+        android:id="@+id/txt_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+        android:textColor="@color/colorWhite"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:layout_marginTop="144dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Começar "
+        android:id="@+id/Bt_start"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="125dp"
+        android:background="@drawable/screen_border"
+        android:onClick="selectFrag"/>
+
+
+
+</RelativeLayout>

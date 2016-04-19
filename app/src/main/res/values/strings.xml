@@ -15,6 +15,10 @@
     <string name="Role">Not assigned</string>
     <string name="method">Login Method</string>
     <string name="Choose">Choose Method</string>
-    <string name="action_swap_camera">action_swap_camera</string>
+    <string name="action_swap_camera">Swap</string>
+    <string name="title">Libras +</string>
+    <string name="choice">O que deseja fazer?</string>
+    <string name="phrase">Clique em uma letra ou número</string>
+
 
 </resources>
